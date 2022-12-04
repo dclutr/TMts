@@ -20,7 +20,7 @@ editing complete
 View |> Edit
 ------------
 
-Click on agenda to back to edit mode
+Click on agenda to back to go back to edit mode
 
 Source
 ------
