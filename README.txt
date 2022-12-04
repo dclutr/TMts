@@ -5,6 +5,8 @@ Browser based tools for toastmaster weekly meetings
 
 See folder/file named example in each tool for example images
 
+MIT No Attribution license (beginning of each source file)
+
 1. type_agenda
 ==============
 
