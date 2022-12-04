@@ -1,0 +1,537 @@
+<!--
+MIT No Attribution
+
+Copyright 2021, 2022 Akshansh Manchanda
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this
+software and associated documentation files (the "Software"), to deal in the Software
+without restriction, including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script>
+
+function DefaultMeeting() {
+
+  return (	
+    "Meeting #100 | "+ `Date: ${DateMeeting()} | `+ "Time: 15:00 to 16:30\n"+ "Theme: A few words are written\n"+
+    "10 | All Role Players | \n"+ "Setting up and getting ready to start the meeting\n"+
+    "*START\n"+
+    "04 | Sergeant-at-arms | \n"+ "Calls meeting to order and explains rules\n"+
+    "04 | Presiding Officer | \n"+ "Presiding Officer's Welcome Address\n"+
+    "04 | Toastmaster of the Day | \n"+ "Introduces the theme for the meeting\n"+
+    "02 | Timer | \n"+ "Roles and Responsibilities\n"+
+    "02 | Ah counter | \n"+ "Roles and Responsibilities\n"+
+    "02 | Grammarian | \n"+ "Roles and Responsibilities\n"+
+    "02 | General Evaluator  | \n"+ "Roles and Responsibilities\n"+
+    "04 | Toastmaster of the Day | \n"+ "Elaborates on the theme\n"+
+    "*PREPARED SPEECH ROUND\n"+
+    "01 | Evaluator 1 | \n"+ "Speech Objectives of Speaker 1\n"+
+    "07 | Speaker 1 | \n"+ "Speech\n"+
+    "01 | Feedback to Speaker 1\n"+
+    "02 | Toastmaster of the Day | \n"+ "Timer informs about the timing details and Voting for the best speaker\n"+
+    "03 | Toastmaster of the Day | \n"+ "Elaborates on the theme\n"+
+    "*TABLE TOPICS SESSION\n"+
+    "02 | Table Topics Master | \n"+ "Explain structure of Table Topics Session\n"+
+    "15 | Table Topics Master | \n"+ "Table Topics Session\n"+
+    "02 | Table Topics Master | \n"+ "Timer informs about the timing details and Voting for the best table topic speaker\n"+
+    "02 | Toastmaster of the Day | \n"+ "Elaborates on the theme\n"+
+    "*EVALUATION ROUND\n"+
+    "01 | General Evaluator  | \n"+ "Overview of Evaluation Session\n"+
+    "03 | Evaluator 1 | \n"+ "Evaluation for Speaker 1\n"+
+    "02 | General Evaluator | \n"+ "Timer informs about the timing details and Voting for the best evaluator\n"+
+    "03 | Grammarian | \n"+ "Grammarian's Report\n"+
+    "03 | Ah counter | \n"+ "Ah-Counter's Report\n"+
+    "08 | General Evaluator | \n"+ "General Evaluator's Report\n"+
+    "02 | General Evaluator | \n"+ "Voting for the best roleplayers\n"+
+    "02 | Toastmaster of the Day | \n"+ "Conclusion\n"+
+    "05 | Presiding Officer | \n"+ "Awards & Concluding Remarks\n"
+  );
+}
+
+function DefaultRoleplayers() {
+
+  return (	
+    "Sergeant-at-arms\n"+ "TM Frodo\n"+
+    "Presiding Officer\n"+ "TM Aragon\n"+
+    "Toastmaster of the Day\n"+ "TM Eowyn\n"+
+    "Timer\n"+ "TM Gandalf\n"+
+    "Ah counter\n"+ "TM Pippin\n"+
+    "Grammarian\n"+ "TM Boromir\n"+
+    "General Evaluator\n"+ "TM Galadriel\n"+
+    "Evaluator 1\n"+ "TM Elrond\n"+
+    "Speaker 1\n"+ "TM Bilbo\n"+
+    "Table Topics Master\n"+ "TM Merry\n"
+  );
+}
+
+function ZeroFill( str ) {
+
+  str=`${str}`;
+  for( let i=str.length; i<2; i++ ) {
+    str = `0${str}`;
+  }
+  return str;
+}
+
+function th(a) {
+	
+  a=""+a;
+  return (
+    a[a.length-2]==="1"
+      ?"th"
+      :a[a.length-1]==="1"
+        ?"st"
+        :a[a.length-1]==="2"
+          ?"nd"
+          :a[a.length-1]==="3"
+            ?"rd"
+            :"th"
+  );
+}
+
+function Minutes(time) {
+
+  let [a, b] = time.split(":");
+  a = parseInt(a);
+  b = parseInt(b);
+
+  let m = a*60+b;
+  return ( 
+    m>=24*3600 
+      ?m-24*3600 
+      :m
+  );
+}
+
+function Time(m) {
+
+  h = parseInt(m/60);
+  h = 
+    h>=24 
+        ?h-24 
+        :h;
+
+  m = m%60;
+  m = 
+    m<10 
+      ?"0"+m 
+      :m;
+
+  return h+":"+m;
+}
+
+function DateMeeting() {
+
+  const months = 
+    ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+  const dateNow = new Date();
+  const dayNow = dateNow.getDay();
+
+  const offset = 
+    dayNow==7
+      ?6
+      :6-dayNow;
+
+  const dateMeet = 
+    new Date(dateNow.getTime() + offset*24*3600*1000);
+
+  const dateFormatted = 
+    dateNow.getDate() + th(dateNow.getDate()) + " "+months[dateNow.getMonth()] + " " + dateNow.getFullYear();
+
+	return dateFormatted;					 
+}
+
+function ParseMeeting() {
+
+  const rows = document.getElementById("meeting").value.split("\n");
+  const firstRow=rows[0]+" | "+rows[1];
+  rows[0] = firstRow;
+
+  let started = false;
+  let minutesBefore;
+
+  let about = {};
+  about["minutesBefore"] = 0;
+  about["minutesAfter"]=0;
+
+  let timings = [];
+
+  let events = [];
+  let eventNo = 0;
+  let newEvent = true;
+
+  for(let i=0; i<rows.length; i++) {
+
+    if(!i) {
+
+      [a,b,c,d] = rows[i].split(" | ");
+         
+      about["number"] = a.trim().split(" ")[1].replace("#","");
+
+      about["date"] = b.trim().split(" ").slice(1).join(" ");
+         
+      [about["start"],, about["end"]] = c.trim().split(" ").slice(1);
+         
+      about["theme"] = d.trim().split(" ").slice(1).join(" ").trim(); 
+      
+    } else if(i!=1) {	
+
+      let row = rows[i].trim();
+
+      if(row[0]==="*") {
+
+        if(!started) {
+
+          if(rows[i] === "*START") {
+
+            started = true;
+            continue;
+          }
+        } 
+
+        timings[eventNo] = null;
+        events[eventNo] = row.substr(1);
+        eventNo++;
+
+      } else if(row) {
+        
+        values=row.split("|");
+
+        if(newEvent) {
+
+           timings[eventNo] = values[0];
+           values = values.slice(1);
+
+           if(!started) {
+              about["minutesBefore"] = about["minutesBefore"] + parseInt(timings[eventNo]);
+           } else {
+              about["minutesAfter"] = about["minutesAfter"] + parseInt(timings[eventNo]);
+           }
+        }
+
+        if(!events[eventNo]) { events[eventNo] = []; }
+
+        for(let j=0; j<values.length; j++) {
+
+           if(values[j]) {
+              events[eventNo].push(values[j].trim());
+           }
+        }
+        if(row[row.length-1]!="|") {
+           newEvent = true;
+           eventNo++;
+        } else {
+           newEvent = false;       
+        }
+      }
+    }
+  }
+  return [about, timings, events];
+}
+
+function ParseRoleplayers() {
+
+  const rows = document.getElementById("roleplayers").value.split("\n");
+
+  let roleplayers = {};
+  let key = "useless text";
+
+  for(let i=0; i<rows.length; i++) {
+
+    if(!(i%2)) {
+      key = rows[i].trim();
+    } else {
+      roleplayers[key] = rows[i].trim();
+    }
+  }
+  return roleplayers;
+}
+
+function BackToForm() {
+
+  document.getElementById("agenda").style.display = "none";
+  document.getElementById("form").style.display = "block";
+}
+
+function LoadDefaultTemplate() {
+
+  document.getElementById("roleplayers").value = DefaultRoleplayers();
+  document.getElementById("meeting").value = DefaultMeeting();
+}
+
+function CalculateTime() {
+
+  const [about] = ParseMeeting();
+    document.getElementById("calculate-time").innerHTML = `${about["minutesAfter"]} ` + "minutes from START";
+}
+
+function CreateAgenda() {
+
+  document.getElementById("form").style.display = "none";
+  document.getElementById("agenda").style.display = "block";
+
+  const [about,timings,events] = ParseMeeting();
+  const roleplayers=ParseRoleplayers();
+
+  document.getElementById("header-2").innerHTML =
+    `Meeting: #${about.number} | ` + 
+    `Date: ${about.date} | ` +
+    `Time: ${about.start} to ${about.end}`;
+
+  document.getElementById("header-3").innerHTML = `Theme: ${about.theme}`;
+
+  document.getElementById("header-4").innerHTML =
+    "Agenda of the " + `${about.number}${th(about.number)}` + " Chapter Meeting";
+
+  let newHTML = "";
+  let time = Minutes(about.start) - about["minutesBefore"];
+
+  for(let i=0; i<timings.length; i++) {
+
+    if(!timings[i]) {
+      newHTML =
+        newHTML +
+`<tr>
+  <td class="col1234"um">
+              ${events[i]}
+  </td>
+</tr>`;
+
+    } else {
+      
+      if(events[i].length==2) {
+
+        let adjustment = 
+          events[i][1].length>50
+            ?' style="height:40px;"'
+            :'';
+
+        newHTML =
+          newHTML +
+`<tr>
+  <td class="col1"${adjustment}>${Time(time)}</td>
+  <td class="col2"${adjustment}>${timings[i]}</td>
+  <td class="col3 l-text"${adjustment}>
+     ${events[i][0]}
+     ${
+        roleplayers[events[i][0]]
+           ?": "+roleplayers[events[i][0]]
+           :""
+     }
+  </td>
+  <td class="col4 l-text"${adjustment}>
+     ${events[i][1]}
+  </td>
+</tr>`;
+
+      } else {
+
+        newHTML =
+          newHTML +
+`<tr>
+  <td class="col1">${Time(time)}</td>
+  <td class="col2">${timings[i]}</td>
+  <td class="col34">${events[i][0]}</td>
+</tr>`;
+
+      }
+
+      time=time+parseInt(timings[i]);
+    }
+  }
+
+  newHTML =
+    newHTML +
+`<tr>
+  <td class="col1">${Time(time)}</td>
+  <td class="col2">${ZeroFill(Minutes(about.end)-time)}</td>
+  <td class="col34">Buffer Time</td>
+</tr>`
+
+  document.getElementById("schedule").innerHTML=newHTML;
+  document.getElementById("adjourns").innerHTML= `…..............Meeting Adjourns at ${about.end}…..................`;
+}
+</script>
+</head>
+<body>
+  <div id="form">
+
+    <button id="load-default" onclick="LoadDefaultTemplate()">Load default template</button>
+    <button id="calculate-time" onclick="CalculateTime()" >Calculate time</button>
+    <button id="create-agenda" onclick="CreateAgenda()" >Create agenda </button>
+
+    <br/>
+
+    <textarea id="meeting" cols="72" rows="100" ></textarea>
+    <textarea id="roleplayers" cols="24" rows="50" ></textarea>
+
+  </div>
+	<div id="agenda" style="display: none;" onclick="BackToForm()" >
+
+    <img style="width:100px;" src="https://toastmasterscdn.azureedge.net/medias/images/brand-items/logos-and-wordmarks/toastmasters-logo-color-png.png"/>
+    
+    <div id="header-1"> A Certain Toastmasters Club </div>
+    <div id="header-2"> Meeting: | Date: | Time: </div>
+    <div id="header-3"> Theme: </div>
+    <div id="header-4"> Agenda of the </div>
+    <div id="header-5"> Microsoft Teams Meeting </div>
+    <table class="bordered2">			
+      <tr>
+        <th class="col1">TIME</th>
+        <th class="col2">MINUTES</th>
+        <th class="col3">ROLEPLAYER</th>
+        <th class="col4">ACTIVITY</th>
+      </tr>
+    </table>
+    <table class="bordered" id="schedule"></table>
+      <b>
+    <div class="bordered" id="adjourns">  
+    </div>
+    <div class="bordered">  
+      Albus Dumbledore +919999999999<br/>
+      President, A Certain Toastmasters Club	
+    </div>
+    <div class="bordered">  
+      Club Mission:</b><br/>
+      We provide a supportive and positive learning 
+      experience in which members are empowered to 
+      develop communication and leadership skills, 
+      resulting in greater self-confidence and 
+      personal growth.
+    </div>
+</div>
+<style>
+
+* {
+  box-sizing:border-box;
+  font-family:Arial;
+  text-align:center;
+}
+
+textarea, p, div, img, td {
+	float: left;
+}
+
+textarea {
+  font-size:12px;
+}
+
+#agenda {
+  width:1050px;
+  height:1500px; 
+  padding:50px;
+  position:absolute;
+  top:0px;
+  left:0px;
+  border-width:0px 2px 2px 2px;
+}
+
+#header-1, #header-2, #header-3, #header-4, #header-5 {
+ float:left;
+ width:750px;
+}
+
+#header-1 {
+  color:#004165;
+  font-size:28px;
+  font-weight:bold;
+}
+
+#header-2 {
+  font-size:18px;
+}
+
+#header-3 {		
+  font-size:18px;
+}
+
+#header-4 {
+  color:#000090;  
+  font-size:18px;
+  font-weight:bold;
+  text-decoration:underline;
+  text-decoration-color:#000090;  
+}
+
+#header-5 {
+	font-size:18px;
+	font-weight:bold;
+  margin-left:100px;  
+}
+
+.bordered, .bordered2 {
+  width:900px;
+  margin-left:25px;
+  text-align:center;
+  border-color:#000000;
+  border-style:solid;
+}
+
+.bordered {
+  border-collapse:collapse;
+  border-width:0px 2px 2px 2px;
+}
+
+.bordered2 {
+  color:#000090;
+  background:#fff2cc;
+  border-width:2px 2px 2px 2px;
+}
+
+.col1 {
+  width:85px;
+  margin-left:10px;
+}
+
+.col2 {
+  width:105px;
+}
+
+.col3 {
+  width:325px;
+}
+
+.col4 {
+  width:355px;
+}
+
+.col34 {
+  width:680px;
+}
+
+.col1234 {
+  width:890px;
+  background:#ffcc00;
+  margin-left:2px;
+  color:#094461;
+  font-weight:bold;
+}
+
+.l-text {
+  text-align:left;
+}
+
+td {
+  padding-left:2px;
+  padding-right:2px;
+  border:1px solid black;
+}
+
+</style>
+</body>
+</html>
