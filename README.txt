@@ -9,7 +9,7 @@ See folder/file named example in each tool for example images
 ==============
 
 Edit agendas using plaintext. No option to save. Hope your browser
-has a good screenshot tool
+or operating system has a good screenshot tool
 
 Edit |> View
 -------------
